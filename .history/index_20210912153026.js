@@ -1,28 +1,28 @@
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const path = require("path");
-const express = require("express");
-const webPush = require("web-push");
+import { json } from "body-parser";
+import cors from "cors";
+import { join } from "path";
+import express, { static } from "express";
+import { setVapidDetails, sendNotification } from "web-push";
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(json());
 // app.use(express.json());
 // app.use(express.urlencoded({
 //   extended: true
 // }));
-app.use(express.static(path.join(__dirname, "client")));
+app.use(static(join(__dirname, "client")));
 
 let VAPID_PUBLIC_KEY =
   "BBYv_6CDFrsQlljHZQd4SlcZNNt-V8fKNRHNmqe6tWJxV2yLzBg0jl8-FVPYWzz4hixZgdodBzh1WYf-QYHYTKo";
 
-// let VAPID_PRIVATE_KEY = "gJXE0oxNZL24kTbudnBRdvBBY5WsDhSSSBq58DM_V60";
+let VAPID_PRIVATE_KEY = "gJXE0oxNZL24kTbudnBRdvBBY5WsDhSSSBq58DM_V60";
 
-// webPush.setVapidDetails(
-//   "mailto:t.hoang201@@gmail.com/",
-//   VAPID_PUBLIC_KEY,
-//   VAPID_PRIVATE_KEY
-// );
+setVapidDetails(
+  "mailto:t.hoang201@@gmail.com/",
+  VAPID_PUBLIC_KEY,
+  VAPID_PRIVATE_KEY
+);
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
@@ -34,12 +34,9 @@ app.post("/subscribe", function (req, res) {
   const payload = JSON.stringify({ title: "Push test" });
 
   const subscription = req.body;
-  res.sendStatus(201).json({});
-  console.log(subscription);
+  //   res.sendStatus(201).json({});
 
-  webPush
-    .sendNotification(subscription, payload)
-    .catch((err) => console.log(err));
+  sendNotification(subscription, payload).catch((err) => console.log(err));
 });
 
 const port = 4000;

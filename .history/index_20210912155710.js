@@ -34,7 +34,7 @@ app.post("/subscribe", function (req, res) {
   const payload = JSON.stringify({ title: "Push test" });
 
   const subscription = req.body;
-  res.sendStatus(201).json({});
+  //   res.sendStatus(201).json({});
   console.log(subscription);
 
   webPush
